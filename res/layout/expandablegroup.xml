@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="40dp"
+
+
+
+    android:clickable="true"
+
+    android:orientation="vertical"
+
+    android:paddingLeft="40dp"
+
+    tools:context=".MainActivity"
+    >
+
+
+
+<RelativeLayout
+
+    android:layout_width="match_parent"
+
+    android:layout_height="39dp"
+
+    android:gravity="center_vertical">
+
+
+
+<TextView
+
+    android:id="@+id/myVariant"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+
+    android:background="@android:color/transparent"
+    android:textColor="#FFFFFF"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    android:layout_alignParentBottom="false"
+    android:layout_alignParentLeft="false"
+    android:layout_alignParentTop="false"
+    android:layout_centerVertical="true" />
+
+<ImageView
+    android:id="@+id/whoseTurn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:layout_centerHorizontal="true"
+    android:layout_marginRight="5dp"
+    android:layout_centerVertical="true" />
+
+
+    <TextView
+
+        android:id="@+id/theirVariant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp" />
+
+
+    </RelativeLayout>
+
+    </LinearLayout>

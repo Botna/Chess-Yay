@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00A2E8">
+    >
+
+    <!--<ImageView-->
+        <!--android:id="@+id/classchoice"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:src="@drawable/classchoice"-->
+        <!--/>-->
+
+    <ImageButton
+        android:id="@+id/classicbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/classic"
+        android:onClick="chooseTeam"
+
+        />
+    <ImageButton
+        android:id="@+id/nemesisbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/nemesis"
+        android:onClick="chooseTeam"
+        />
+    <ImageButton
+        android:id="@+id/reapersbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/reapers"
+        android:onClick="chooseTeam"
+        />
+    <ImageButton
+        android:id="@+id/empoweredbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/empowered"
+        android:onClick="chooseTeam"
+        />
+    <ImageButton
+        android:id="@+id/animalsbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/animals"
+        android:onClick="chooseTeam"
+        />
+    <ImageButton
+        android:id="@+id/twokingsbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
+        android:src="@drawable/twokings"
+        android:onClick="chooseTeam"
+        />
+
+
+
+</LinearLayout>
