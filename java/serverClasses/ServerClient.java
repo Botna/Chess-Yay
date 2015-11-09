@@ -208,7 +208,7 @@ public class ServerClient
 
 			try{
 				if (client == null){
-					InetSocketAddress temp = new InetSocketAddress("50.158.235.234", 9812);
+					InetSocketAddress temp = new InetSocketAddress("76.115.34.47", 9812);
                     client = new Socket();
                     client.connect(temp, 2000);
 

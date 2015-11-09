@@ -94,8 +94,7 @@ public class CampaignActivity extends ActionBarActivity {
 
     private void updateActivity(Intent intent) {
 
-
-
+        //Look at the comments!
         String returnState = intent.getStringExtra(RS);
         String returnMessage = intent.getStringExtra(RM);
         Bundle b = null;
