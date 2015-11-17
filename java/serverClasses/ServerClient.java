@@ -27,10 +27,15 @@ import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.botna.chess2.R;
+
+import chess2.customEXC.VersionMismatchException;
+
 
 public class ServerClient 
 {
 
+	private final String CURR_VERSION = "1.5";
 	public ServerClient() throws UnknownHostException, IOException, InterruptedException, ExecutionException{
 		new CreateTask().execute().get();
 	}
@@ -66,6 +71,12 @@ public class ServerClient
 		response = (String) new InTask().execute().get();
 
 		splitString  = response.split(":");
+
+		if(!splitString[3].equals(CURR_VERSION))
+		{
+			//we have a version mismatch.   We need to throw and exception and prompt the user to update.
+			throw new VersionMismatchException("You need to update your client");
+		}
 		if (splitString.length >1 )
 		{//signifies the appropriate length for a return packet
 			if(splitString[0].equals("1"))
@@ -166,46 +177,11 @@ public class ServerClient
         return true;
     }
 
-    private class LoginTask   extends AsyncTask<String, Void, String>  {
-		@Override
-		protected String doInBackground(String... urls) {
-
-
-			if(android.os.Debug.isDebuggerConnected())
-				android.os.Debug.waitForDebugger();
-
-			String[] temp;
-
-
-			if (client != null){
-
-
-				temp = urls[0].split(":");
-				try {
-					return loginAttempt(temp[0], temp[1]);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			return "Client Not initialized";
-
-		}
-
-	}
-
-
 	private class CreateTask   extends AsyncTask<String, Void, String>  {
 		@Override
 		protected String doInBackground(String... urls) {
-
-
 			if(android.os.Debug.isDebuggerConnected())
 				android.os.Debug.waitForDebugger();
-
-
-
 			try{
 				if (client == null){
 					InetSocketAddress temp = new InetSocketAddress("76.115.34.47", 9812);
@@ -219,8 +195,6 @@ public class ServerClient
 					inFromServer = client.getInputStream();
 					in =
 							new ObjectInputStream(inFromServer);
-
-
 				}
 
 
@@ -238,60 +212,6 @@ public class ServerClient
             return "success";
 		}
 
-	}
-	private String loginAttempt(String userName, String password) throws Exception
-	{
-		//String temp = username + ":" + password;
-		//new LoginTask().execute(temp).get();
-
-		loggedIn = false;
-
-		String payload = "";
-		String response = "";
-		String[] splitString;
-		if (client.isBound()) 
-		{
-			payload = "1:" + userName + ":" + password;
-			try {
-				out.writeObject(payload);
-			} catch (IOException e) {
-				throw new Exception("Sending Login Information failed");
-			}
-
-
-			response = (String) in.readObject();
-
-			splitString  = response.split(":");
-			if (splitString.length >1 )
-			{//signifies the appropriate length for a return packet
-				if(splitString[0].equals("1"))
-				{//Login Functionality
-
-					if(splitString[1].equals("0"))
-					{
-						loggedIn = true;
-						return "Logged in!";
-
-
-					}
-					else if(splitString[1].equals("1"))
-					{
-						throw new Exception("Wrong Password");
-					}
-					else
-					{
-						throw new Exception("User Doesnt Exist");
-					}
-
-				}
-			}
-		}
-		else
-		{
-			throw new Exception("Server is down.");
-		}
-
-		return "Shouldnt happen";
 	}
 
 	private class InTask   extends AsyncTask<String, Void, Object>  {

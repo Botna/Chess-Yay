@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.app.AlertDialog;
@@ -60,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
     protected String state = null;
     protected boolean transitioning = false;
     protected MainActivity pointer = this;
+    protected boolean needs_update = false;
     private Intent myService;
 
 
@@ -79,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
         String returnState = intent.getStringExtra(RS);
         String returnMessage = intent.getStringExtra(RM);
         Bundle b = null;
-
+        needs_update = false;
         switch(returnState)
         {
             case "NOSAVEDLOGIN":
@@ -190,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
 
                     setContentView(R.layout.activity_main_menu);
                 }
-
+                break;
             case "JUSTTOAST":
             case "ERROR":
 
@@ -208,7 +210,13 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 break;
+            case "UPDATE":
+                //need to lock the user from doing anything and force them to update.
+                b = intent.getExtras();
 
+                displayUpdate(b.getString(RM));
+
+                break;
 
         }
     }
@@ -319,7 +327,7 @@ public class MainActivity extends ActionBarActivity {
 
 
 
-        final View temp = inflater.inflate(R.layout.activity_main,null);
+        final View temp = inflater.inflate(R.layout.activity_main, null);
 
         builder.setView(temp);
         builder.setCancelable(false);
@@ -350,7 +358,26 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void displayUpdate(String message)
+    {
+        //Just display login screen.
+        needs_update = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(message);
 
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Botna/outputs/blob/master/apk/app-debug.apk?raw=true"));
+                startActivity(browserIntent);
+
+            }
+        });
+
+
+
+        builder.show();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -374,38 +401,38 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public void register(View view)
-    {
-        EditText usernameText = (EditText) findViewById(R.id.username);
-        EditText passwordText = (EditText) findViewById(R.id.password);
-        String username = usernameText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        hideSoftKeyboard();
-
-        if(username.equals("") || password.equals(""))
-        {
-            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
-            toast.show();
-            displayLogin();
-        }
-        else if(username.length() >12)
-        {
-            toast = Toast.makeText(getApplicationContext(),"Name max length is 12 chars",Toast.LENGTH_LONG);
-            toast.show();
-            displayLogin();
-        }
-        else
-        {
-            myService.putExtra("STATE", "REGISTERATTEMPT");
-            String[] temp = new String[2];
-            temp[0] = username;
-            temp[1] = password;
-            myService.putExtra("USERNAME", username);
-            myService.putExtra("PASSWORD", password);
-            startService(myService);
-        }
-    }
+//    public void register(View view)
+//    {
+//        EditText usernameText = (EditText) findViewById(R.id.username);
+//        EditText passwordText = (EditText) findViewById(R.id.password);
+//        String username = usernameText.getText().toString();
+//        String password = passwordText.getText().toString();
+//
+//        hideSoftKeyboard();
+//
+//        if(username.equals("") || password.equals(""))
+//        {
+//            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
+//            toast.show();
+//            displayLogin();
+//        }
+//        else if(username.length() >12)
+//        {
+//            toast = Toast.makeText(getApplicationContext(),"Name max length is 12 chars",Toast.LENGTH_LONG);
+//            toast.show();
+//            displayLogin();
+//        }
+//        else
+//        {
+//            myService.putExtra("STATE", "REGISTERATTEMPT");
+//            String[] temp = new String[2];
+//            temp[0] = username;
+//            temp[1] = password;
+//            myService.putExtra("USERNAME", username);
+//            myService.putExtra("PASSWORD", password);
+//            startService(myService);
+//        }
+//    }
 
     public void register(String username, String pword)
     {
@@ -430,31 +457,31 @@ public class MainActivity extends ActionBarActivity {
             startService(myService);
         }
     }
-    public void loginButton(View view)
-    {
-
-
-        EditText usernameText = (EditText) findViewById(R.id.username);
-        EditText passwordText = (EditText) findViewById(R.id.password);
-        String username = usernameText.getText().toString();
-        String password = passwordText.getText().toString();
-
-
-        SharedPreferences prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-        String restoredRegid = prefs.getString("REGID", null);
-        hideSoftKeyboard();
-
-        if(username.equals("") || password.equals(""))
-        {
-            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
-            toast.show();
-            displayLogin();
-        }
-        else
-        {
-            login(username, password,restoredRegid);
-        }
-    }
+//    public void loginButton(View view)
+//    {
+//
+//
+//        EditText usernameText = (EditText) findViewById(R.id.username);
+//        EditText passwordText = (EditText) findViewById(R.id.password);
+//        String username = usernameText.getText().toString();
+//        String password = passwordText.getText().toString();
+//
+//
+//        SharedPreferences prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+//        String restoredRegid = prefs.getString("REGID", null);
+//        hideSoftKeyboard();
+//
+//        if(username.equals("") || password.equals(""))
+//        {
+//            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
+//            toast.show();
+//            displayLogin();
+//        }
+//        else
+//        {
+//            login(username, password,restoredRegid);
+//        }
+//    }
     public void loginButton(String username, String password)
     {
         SharedPreferences prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
@@ -486,32 +513,49 @@ public class MainActivity extends ActionBarActivity {
 
     public void newGame(View view)
     {
-        state = "NEWGAMELAUNCHED";
-        transitioning = true;
-        Intent intent = new Intent(this, NewGameActivity.class);
+        if(!needs_update) {
+            state = "NEWGAMELAUNCHED";
+            transitioning = true;
+            Intent intent = new Intent(this, NewGameActivity.class);
 
 
-        startActivityForResult(intent, 0);
+            startActivityForResult(intent, 0);
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
     }
 
     public void rulesLaunch(View view)
     {
-
+        if(!needs_update) {
         Intent intent = new Intent(this, TempActivity.class);
 
 
         startActivity(intent);
-
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
     }
     public void accountLaunch(View view)
     {
+        if(!needs_update) {
         Intent intent = new Intent(this, TempActivity.class);
 
 
         startActivity(intent);
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
     }
     public void settingsLaunch(View view)
     {
+        if(!needs_update) {
         Intent intent = new Intent(this, TempActivity.class);
 
 
@@ -519,6 +563,11 @@ public class MainActivity extends ActionBarActivity {
 
 
         startActivity(intent);
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
     }
 
     public void logout(View view)
@@ -530,19 +579,27 @@ public class MainActivity extends ActionBarActivity {
     }
     public void getGames()
     {
-
+        if(!needs_update) {
         myService.putExtra("STATE", "REQUESTGAMES");
         myService.putExtra("USERNAME", myName);
         myService.putExtra("PASSWORD", myPWord);
         startService(myService);
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
 
     }
 
-    public void playGame(View view)
-    {
-
+    public void playGame(View view) {
+        if (!needs_update) {
         getGames();
-
+        }
+        else
+        {
+            displayUpdate("Still need an update =/");
+        }
     }
 
     public void suppressNotification()

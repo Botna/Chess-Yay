@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.os.IBinder;
 
 
+import junit.runner.Version;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,6 +29,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
+import chess2.customEXC.VersionMismatchException;
 import chess2.source.GameBoard;
 import chess2.source.GameContainer;
 import chess2.source.GameHistoryContainer;
@@ -128,7 +131,12 @@ public class ChessService extends Service {
                         returnState = "AUTHENTICATED";
                         returnMessage = result;
                         myState = "LOGGEDIN";
-                    } catch (Exception e) {
+                    }catch( VersionMismatchException e)
+                    {
+                        returnState = "UPDATE";
+                        returnMessage = e.getMessage();
+                    }
+                    catch (Exception e) {
 
                         //Wrong username/pwrod/ or generic error.
                         returnState = "ERROR";
