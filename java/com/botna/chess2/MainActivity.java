@@ -192,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
 
                     setContentView(R.layout.activity_main_menu);
                 }
-                break;
+
             case "JUSTTOAST":
             case "ERROR":
 
