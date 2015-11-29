@@ -65,9 +65,9 @@ public class ChessClass
 	}
 
 
-	public String login(String userName, String password, String regid) throws Exception
+	public String login(String userName, String password, String regid, String version) throws Exception
 	{
-		theClient.login(userName, password, regid);
+		theClient.login(userName, password, regid,version);
 		//if exception doenst break us out here, set loggedIn as true.
 		this.myName = userName;
 		return "Logged in";

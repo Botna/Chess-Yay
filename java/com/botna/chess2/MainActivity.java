@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
     protected MainActivity pointer = this;
     protected boolean needs_update = false;
     private Intent myService;
+    private AlertDialog currentDialog;
 
 
     private BroadcastReceiver broadCastReceiver = new BroadcastReceiver() {
@@ -238,12 +239,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public void onRestart()
-    {
-        super.onRestart();
 
-    }
     @Override
     public void onStart()
     {
@@ -258,6 +254,10 @@ public class MainActivity extends ActionBarActivity {
     {
         super.onPause();
 
+        if(currentDialog != null)
+        {
+            currentDialog.dismiss();
+        }
 
         //only do this if we are actually going into a 'paused' state.
         //if we are transitioning into a new activity, just unbind the receiver
@@ -330,7 +330,7 @@ public class MainActivity extends ActionBarActivity {
         final View temp = inflater.inflate(R.layout.activity_main, null);
 
         builder.setView(temp);
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
@@ -354,7 +354,13 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        builder.show();
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
+        currentDialog = builder.create();
+        currentDialog.show();
 
     }
 
@@ -375,8 +381,8 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-
-        builder.show();
+        currentDialog = builder.create();
+        currentDialog.show();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -401,39 +407,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-//    public void register(View view)
-//    {
-//        EditText usernameText = (EditText) findViewById(R.id.username);
-//        EditText passwordText = (EditText) findViewById(R.id.password);
-//        String username = usernameText.getText().toString();
-//        String password = passwordText.getText().toString();
-//
-//        hideSoftKeyboard();
-//
-//        if(username.equals("") || password.equals(""))
-//        {
-//            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
-//            toast.show();
-//            displayLogin();
-//        }
-//        else if(username.length() >12)
-//        {
-//            toast = Toast.makeText(getApplicationContext(),"Name max length is 12 chars",Toast.LENGTH_LONG);
-//            toast.show();
-//            displayLogin();
-//        }
-//        else
-//        {
-//            myService.putExtra("STATE", "REGISTERATTEMPT");
-//            String[] temp = new String[2];
-//            temp[0] = username;
-//            temp[1] = password;
-//            myService.putExtra("USERNAME", username);
-//            myService.putExtra("PASSWORD", password);
-//            startService(myService);
-//        }
-//    }
-
     public void register(String username, String pword)
     {
 
@@ -457,31 +430,7 @@ public class MainActivity extends ActionBarActivity {
             startService(myService);
         }
     }
-//    public void loginButton(View view)
-//    {
-//
-//
-//        EditText usernameText = (EditText) findViewById(R.id.username);
-//        EditText passwordText = (EditText) findViewById(R.id.password);
-//        String username = usernameText.getText().toString();
-//        String password = passwordText.getText().toString();
-//
-//
-//        SharedPreferences prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-//        String restoredRegid = prefs.getString("REGID", null);
-//        hideSoftKeyboard();
-//
-//        if(username.equals("") || password.equals(""))
-//        {
-//            toast = Toast.makeText(getApplicationContext(),"Enter Username/Password",Toast.LENGTH_LONG);
-//            toast.show();
-//            displayLogin();
-//        }
-//        else
-//        {
-//            login(username, password,restoredRegid);
-//        }
-//    }
+
     public void loginButton(String username, String password)
     {
         SharedPreferences prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
@@ -503,10 +452,11 @@ public class MainActivity extends ActionBarActivity {
     {
         //send the login request to the service, and await a response.
         myService.putExtra("STATE", "LOGINATTEMPT");
-        String[] temp = new String[3];
+        String[] temp = new String[4];
         temp[0] = uname;
         temp[1] = password;
         temp[2] = regid;
+        temp[3] = getResources().getString(R.string.version);
         myService.putExtra("PAYLOAD", temp);
         startService(myService);
     }
@@ -529,16 +479,10 @@ public class MainActivity extends ActionBarActivity {
 
     public void rulesLaunch(View view)
     {
-        if(!needs_update) {
-        Intent intent = new Intent(this, TempActivity.class);
 
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://i.imgur.com/gJvgTWG.jpg"));
+        startActivity(browserIntent);
 
-        startActivity(intent);
-        }
-        else
-        {
-            displayUpdate("Still need an update =/");
-        }
     }
     public void accountLaunch(View view)
     {
@@ -557,11 +501,6 @@ public class MainActivity extends ActionBarActivity {
     {
         if(!needs_update) {
         Intent intent = new Intent(this, TempActivity.class);
-
-
-
-
-
         startActivity(intent);
         }
         else
@@ -572,10 +511,31 @@ public class MainActivity extends ActionBarActivity {
 
     public void logout(View view)
     {
-        Intent intent = new Intent(this, TempActivity.class);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                SharedPreferences.Editor prefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE).edit();
+                prefs.remove("USERNAME");
+                prefs.remove("PASSWORD");
+                prefs.apply();
+
+                loginButton("", "");
 
 
-        startActivity(intent);
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+
+                    }
+                }
+        );
+
+        currentDialog = builder.create();
+        currentDialog.show();
     }
     public void getGames()
     {
@@ -607,32 +567,7 @@ public class MainActivity extends ActionBarActivity {
         NotificationManager NM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NM.cancel(38);
     }
-    @SuppressLint("ValidFragment")
-    public  class GameChoiceDialog extends DialogFragment{
 
-        public  Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-
-            builder.setTitle("Pick a Game").setItems(myGamesString, new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-
-                    myService.putExtra("STATE", "LOADGAME");
-                    myService.putExtra("USERNAME", myName);
-                    myService.putExtra("PASSWORD", myPWord);
-                    myService.putExtra("GUID", myGames[which].getGuid().toString());
-                    startService(myService);
-                }
-            });
-
-
-            return builder.create();
-        }
-    }
     @SuppressLint("ValidFragment")
     public class ClassChoiceDialog extends DialogFragment{
 
@@ -652,7 +587,6 @@ public class MainActivity extends ActionBarActivity {
                     startService(myService);
                 }
             });
-
 
             return builder.create();
         }

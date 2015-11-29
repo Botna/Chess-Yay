@@ -125,7 +125,7 @@ public class ChessService extends Service {
                     payload = intent.getStringArrayExtra("PAYLOAD");
 
                     try {
-                        result = theGame.login(payload[0], payload[1], payload[2]);
+                        result = theGame.login(payload[0], payload[1], payload[2],payload[3]);
 
                         //login was a success.
                         returnState = "AUTHENTICATED";

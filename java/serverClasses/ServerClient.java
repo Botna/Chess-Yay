@@ -35,7 +35,7 @@ import chess2.customEXC.VersionMismatchException;
 public class ServerClient 
 {
 
-	private final String CURR_VERSION = "1.5";
+	//private final String CURR_VERSION = "1.5";
 	public ServerClient() throws UnknownHostException, IOException, InterruptedException, ExecutionException{
 		new CreateTask().execute().get();
 	}
@@ -48,7 +48,7 @@ public class ServerClient
 		return loggedIn;
 	}
 
-	public void login(String userName, String password, String regid) throws Exception {
+	public void login(String userName, String password, String regid, String version) throws Exception {
 
 		loggedIn = false;
 
@@ -72,7 +72,7 @@ public class ServerClient
 
 		splitString  = response.split(":");
 
-		if(!splitString[3].equals(CURR_VERSION))
+		if(!splitString[3].equals(version))
 		{
 			//we have a version mismatch.   We need to throw and exception and prompt the user to update.
 			throw new VersionMismatchException("You need to update your client");
