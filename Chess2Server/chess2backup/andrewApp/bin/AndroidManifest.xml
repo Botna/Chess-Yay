@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.andrewapp"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
+<uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+<supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+<supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+		android:theme="@style/CustomActionBarTheme"
+        
+         >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" 
+           >
+           
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+      
+        <activity
+            android:name=".DisplayMessageActivity"
+            android:label="@string/title_activity_display_message"
+            android:parentActivityName="com.example.andrewApp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.andrewApp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MainMenuActivity"
+            android:label="@string/main_menu_title"
+            android:parentActivityName="com.example.andrewApp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.andrewApp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".NewGameActivity"
+            android:label="@string/new_game_title"
+            android:parentActivityName="com.example.andrewApp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.andrewApp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".PlayGameActivity"
+            android:label="@string/play_game_title"
+            android:parentActivityName="com.example.andrewApp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.andrewApp.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>
